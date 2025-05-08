@@ -1,0 +1,37 @@
+FROM {{ docker.from }} 
+
+ENV NODE_OPTS="{{ docker.node_opts }}"
+ENV TIMEZONE="{{ docker.timezone }}"
+ENV NODE_ENV production
+{% if docker.envs -%}
+{%- for key, value in docker.envs.items() -%}
+ENV {{key}}="{{value}}"
+{%- endfor -%}
+{%- endif %}
+{% if docker.ot_agent -%}
+ENV OTEL_SERVICE_NAME="{{ app.name }}"
+ENV OTEL_LOGS_EXPORTER="{{ docker.ot_agent_config.logs_exporter }}"
+ENV OTEL_METRICS_EXPORTER="{{ docker.ot_agent_config.metrics_exporter }}"
+ENV OTEL_TRACES_EXPORTER="{{ docker.ot_agent_config.traces_exporter }}"
+ENV OTEL_PROPAGATORS="{{ docker.ot_agent_config.propagators }}"
+ENV OTEL_EXPORTER_OTLP_TRACES_PROTOCOL="{{ docker.ot_agent_config.exporter_otlp_traces_protocol }}"
+{%- endif %}
+
+USER root
+
+RUN npm install -g npm@10.9.1
+
+RUN mkdir -pv /opt/app \
+    && chown 1001:1001 -Rv /opt/app
+
+USER 1001
+
+WORKDIR /opt/app
+
+COPY ./package* ./
+COPY ./node_modules ./node_modules
+COPY ./dist ./dist
+
+EXPOSE {{ docker.expose }}
+
+CMD ["npm", "run", "start:prod"]

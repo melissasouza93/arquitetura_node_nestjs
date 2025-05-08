@@ -1,0 +1,19 @@
+---
+app:
+  name: projeto_teste_mudar_nome # TODO Nome do projeto
+  replicaCount: 1
+  centro_custo: ciar # TODO Centro de custo
+  value_stream: incloud # TODO Value stream
+docker:
+  from: nexusrepository.bradesco.com.br:8500/ubi8_custom/nodejs-18-minimal:daily-update
+  node_opts: --max-old-space-size=750
+  timezone: America/Sao_Paulo
+  expose: 8080
+  ot_agent: true
+  ot_agent_config:
+    version: 1.24.0
+    logs_exporter: none
+    metrics_exporter: none
+    traces_exporter: none
+    propagators: tracecontext
+    exporter_otlp_traces_protocol: http/protobuf
