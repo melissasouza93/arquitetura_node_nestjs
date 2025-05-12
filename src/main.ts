@@ -11,7 +11,7 @@ async function bootstrap() {
 
   app.enableShutdownHooks();
 
-  const isProduction = process.env.NODE_ENV === 'PRD';
+  const isProduction = config.get<string>('NODE_ENV') === 'PRD';
 
   if (isProduction) {
     app.useLogger(new GlobalLogger());

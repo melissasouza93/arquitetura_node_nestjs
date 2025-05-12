@@ -16,10 +16,17 @@
       "/dist/",
       "/node_modules/",
       "/mocks/",
-      "/config/",
       "/tests/",
-      "/coverage/"
+      "/coverage/",
+      "/config/",
+      "/health/",
+      "/logging/"
     ],
     "coverageDirectory": "coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "collectCoverageFrom": [
+      "src/**/*.ts",
+      "!src/main.ts",
+      "!src/**/*.module.ts"
+    ]
   }
